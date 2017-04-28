@@ -1,3 +1,9 @@
+var gameBoard = "   |   |   \n---+---+---\n   |   |   \n---+---+---\n   |   |   ";
+var xStart = 1;
+var sSkip = 4;
+var yStart = 0;
+var ySkip = 2;
+
 $(function() {
   var width = numFromPixels($('#game').css('width'));
   var height =  numFromPixels($('#game').css('height'));
@@ -11,11 +17,16 @@ $(function() {
     $('body').css('margin-top'),
     $('#game').css('margin-left'),
   ]);
+  setTimeout(drawBoard, 500);
   $('#game').on('click', function(e) {
-    var x = e.clientX - offset_left;
-    var y = e.clientY - offset_top;
+    var rawX = e.clientX - offset_left;
+    var rawY = e.clientY - offset_top;
   });
 });
+
+function drawBoard() {
+  $('#game').text(gameBoard);
+}
 
 function numFromPixels(string) {
   return Number(string.substring(0,string.indexOf('px')));
