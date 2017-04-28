@@ -1,10 +1,19 @@
-var gameBoard = "   |   |   \n---+---+---\n   |   |   \n---+---+---\n   |   |   ";
+var gameBoard = [
+  "   |   |   ",
+  "---+---+---",
+  "   |   |   ",
+  "---+---+---",
+  "   |   |   "
+];
 var xStart = 1;
-var sSkip = 4;
+var xSkip = 4;
 var yStart = 0;
 var ySkip = 2;
+var xDivisions = 3;
+var yDivisions = 3;
 
 $(function() {
+  $('body').css('max-width', $('#game').css('width'));
   var width = numFromPixels($('#game').css('width'));
   var height =  numFromPixels($('#game').css('height'));
   var offset_top = sumNumFromPixels([
@@ -13,19 +22,21 @@ $(function() {
     $('h1').css('margin-top'),
     $('h1').css('margin-bottom'),
   ]);
-  var offset_left = sumNumFromPixels([
-    $('body').css('margin-top'),
-    $('#game').css('margin-left'),
-  ]);
+  var offset_left = numFromPixels($('body').css('margin-left'));
   setTimeout(drawBoard, 500);
   $('#game').on('click', function(e) {
-    var rawX = e.clientX - offset_left;
-    var rawY = e.clientY - offset_top;
+    var x = Math.floor(xDivisions * (e.clientX - offset_left) / width);
+    var y = Math.floor(yDivisions * (e.clientY - offset_top) / height);
+    addChar('X', x, y);
   });
 });
 
 function drawBoard() {
-  $('#game').text(gameBoard);
+  var text = "";
+  for (y = 0; y < gameBoard.length; y++) {
+    text += gameBoard[y] + '\n';
+  }
+  $('#game').text(text);
 }
 
 function numFromPixels(string) {
@@ -38,4 +49,13 @@ function sumNumFromPixels(strings) {
     sum += numFromPixels(strings[i]);
   }
   return sum;
+}
+
+function addChar(char, x, y) {
+  x = xStart + (x * xSkip);
+  y = yStart + (y * ySkip);
+  var line = gameBoard[y];
+  line = line.substring(0, x) + char + line.substring(x + 1, line.length);
+  gameBoard[y] = line;
+  drawBoard();
 }

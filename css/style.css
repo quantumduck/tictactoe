@@ -1,3 +1,7 @@
+html {
+  width: 100%;
+}
+
 *,
 *::before,
 *::after {
@@ -5,11 +9,14 @@
 }
 
 body {
+  max-width: 70%;
+  margin: auto;
   text-align: center;
+  /*text-align: center;*/
 }
 
 #game {
   font-size: 8em;
   display: inline-block;
-  margin: auto;
+  margin: 0;
 }
