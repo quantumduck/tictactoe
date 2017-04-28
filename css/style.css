@@ -1,7 +1,15 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   text-align: center;
 }
 
 #game {
   font-size: 8em;
+  display: inline-block;
+  margin: auto;
 }
