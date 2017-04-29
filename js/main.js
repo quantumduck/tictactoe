@@ -32,6 +32,16 @@ for (var i = 0; i < gridSize; i++) {
 lines.push(diag1);
 lines.push(diag2);
 
+function anyOtherIndex(notThisOne, total) {
+  if ((notThisOne === 0) && (total > 1)) {
+    return 1;
+  } else if (total > 1) {
+    return 0;
+  } else {
+    return -1;
+  }
+}
+
 function drawBoard() {
   var text = "";
   for (y = 0; y < gameBoard.length; y++) {
@@ -149,18 +159,25 @@ function winCondition() {
 function winInOne() {
   for (var l = 0; l < lines.length; l++) {
     var line = lines[l];
-    var char = charAt(line[0].x, line[0].y);
-    var i = 1;
-    while (char === charAt(line[i].x, line[i].y)) {
-      i++;
-    }
-    if (i === gridSize) {
-      return line;
+    // console.log(line);
+    for (var i = 0; i < gridSize; i++) {
+      if (charAt(line[i].x, line[i].y) === ' ') {
+        var k = anyOtherIndex(i, gridSize);
+        var char = charAt(line[k].x, line[k].y);
+        if (char != ' ') {
+          for (var j = 0; j < gridSize; j++) {
+            if ((j != i) && (charAt(line[j].x, line[j].y) != char)) {
+              break;
+            } else if (j === gridSize - 1) {
+              return line[i];
+            }
+          }
+        }
+      }
     }
   }
   return false;
 }
-
 $(function() {
   $('body').css('max-width', $('#game').css('width'));
   setTimeout(drawBoard, 500);
@@ -170,12 +187,14 @@ $(function() {
     if ((x >= 0) && (y >= 0)) {
       addChar(userChar, x, y);
       turnNum++;
+      console.log(winInOne());
       if (winCondition()) {
         $('#message-box').text('You Win!');
       } else if (turnNum >= 5) {
         $('#message-box').text('Tie Game.');
       } else {
         ai();
+        console.log(winInOne());
         if (winCondition()) {
           $('#message-box').text('I Win!');
         }
