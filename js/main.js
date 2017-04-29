@@ -35,8 +35,9 @@ function getX(rawX) {
   var x = Math.floor(gameBoard[0].length * (rawX - offset_left) / width);
   console.log(x);
   if ((x % xSkip) === (xSkip - 1)) {
-    return false;
+    return -1;
   }
+  console.log(Math.floor(x  / xSkip));
   return Math.floor(x / xSkip);
 }
 
@@ -51,8 +52,9 @@ function getY(rawY) {
   var y = Math.floor(gameBoard.length * (rawY - offset_top) / height);
   console.log(y);
   if ((y % ySkip) === (ySkip - 1)) {
-    return false;
+    return -1;
   }
+  console.log(Math.floor(y  / ySkip));
   return Math.floor(y  / ySkip);
 }
 
@@ -73,7 +75,6 @@ function addChar(char, x, y) {
   x = xStart + (x * xSkip);
   y = yStart + (y * ySkip);
   var line = gameBoard[y];
-  console.log(line)
   line = line.substring(0, x) + char + line.substring(x + 1, line.length);
   gameBoard[y] = line;
   drawBoard();
@@ -97,7 +98,7 @@ $(function() {
   $('#game').on('click', function(e) {
     x = getX(e.clientX);
     y = getY(e.clientY);
-    if (x && y) {
+    if ((x >= 0) && (y >= 0)) {
       addChar(userChar, x, y);
       turnNum++;
     }
