@@ -12,7 +12,7 @@ var ySkip = 2;
 
 var userChar = 'X';
 var aiChar = 'O';
-var turnNum = 1;
+var turnNum = 0;
 
 function drawBoard() {
   var text = "";
@@ -72,23 +72,41 @@ function sumNumFromPixels(strings) {
 
 function addChar(char, x, y) {
   // console.log(char + x + y);
+  if (charAt(x, y) != ' ') {
+    return charAt(x, y);
+  }
   x = xStart + (x * xSkip);
   y = yStart + (y * ySkip);
   var line = gameBoard[y];
   line = line.substring(0, x) + char + line.substring(x + 1, line.length);
   gameBoard[y] = line;
   drawBoard();
+  return char;
 }
 
 function charAt(x, y) {
-  return gamdBoard[yStart + (y * ySkip)][Start + (x * xSkip)];
+  return gameBoard[yStart + (y * ySkip)][xStart + (x * xSkip)];
 }
 
 function ai() {
   if (charAt(1, 1) === ' ') {
     addChar(aiChar, 1, 1);
   } else {
-    switch(turnNum) {}
+    switch(turnNum) {
+      case 5:
+      break;
+      default:
+        console.log(turnNum);
+        // play randomly
+        var x = 1;
+        var y = 1;
+        while (charAt(x, y) != ' ') {
+          x = Math.floor(Math.random() * 3);
+          y = Math.floor(Math.random() * 3);
+        }
+        addChar(aiChar, x, y);
+        break;
+    }
   }
 }
 
@@ -101,6 +119,7 @@ $(function() {
     if ((x >= 0) && (y >= 0)) {
       addChar(userChar, x, y);
       turnNum++;
+      ai();
     }
   });
 });
