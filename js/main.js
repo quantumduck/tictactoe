@@ -193,7 +193,7 @@ function winInOne() {
   }
   if (results.length === 0) {
     return false;
-  } else {}
+  } else {
     return results;
   }
 }
