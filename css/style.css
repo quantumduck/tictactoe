@@ -16,6 +16,7 @@ body {
 }
 
 #game {
+  font-family: monospace;
   font-size: 8em;
   display: inline-block;
   margin: 0;
