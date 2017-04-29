@@ -42,6 +42,18 @@ function anyOtherIndex(notThisOne, total) {
   }
 }
 
+function emptySquares() {
+  var results = [];
+  for (var i = 0; i < gridSize; i++) {
+    for (var j = 0; j < gridSize; j++) {
+      if (charAt(i, j) === ' ') {
+        results.push({x: i, y: j});
+      }
+    }
+  }
+  return results;
+}
+
 function drawBoard() {
   var text = "";
   for (y = 0; y < gameBoard.length; y++) {
@@ -117,12 +129,14 @@ function charAt(x, y) {
 }
 
 function aiHard() {
-  switch (charAt(1, 1)) {
-    case ' ':
-      addChar(aiChar, 1, 1);
-      break;
-    case userChar:
-
+  if (winInOne()) {
+    // If there is a spot where either user can win, play there.
+    addChar(aiChar, winInOne().x, winInOne().y);
+  } else if (charAt(1, 1) === ' ') {
+    // If the center is untaken, take it.
+    addChar(aiChar, 1, 1);
+  } else {
+    // Play in a corner, if possible.
   }
 }
 
@@ -157,6 +171,7 @@ function winCondition() {
 }
 
 function winInOne() {
+  var results = [];
   for (var l = 0; l < lines.length; l++) {
     var line = lines[l];
     // console.log(line);
@@ -169,21 +184,26 @@ function winInOne() {
             if ((j != i) && (charAt(line[j].x, line[j].y) != char)) {
               break;
             } else if (j === gridSize - 1) {
-              return line[i];
+              results.push([line[i], char]);
             }
           }
         }
       }
     }
   }
-  return false;
+  if (results.length === 0) {
+    return false;
+  } else {}
+    return results;
+  }
 }
+
 $(function() {
   $('body').css('max-width', $('#game').css('width'));
   setTimeout(drawBoard, 500);
   $('#game').on('click', function(e) {
-    x = getX(e.clientX);
-    y = getY(e.clientY);
+    var x = getX(e.clientX);
+    var y = getY(e.clientY);
     if ((x >= 0) && (y >= 0)) {
       addChar(userChar, x, y);
       turnNum++;
