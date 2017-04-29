@@ -110,18 +110,30 @@ function ai() {
   }
 }
 
-function winner() {
+function winCondition() {
   if ((charAt(0, 0) === charAt(1, 1)) && (charAt (2, 2) === charAt(1, 1))) {
-    return charAt(1, 1);
-  }
-  if ((charAt(0, 2) === charAt(1, 1)) && (charAt (2, 0) === charAt(1, 1))) {
-    return charAt(1, 1);
-  }
-  for (var i = 1; i < 3; i++) {
-    for (var j = 1; j < 3; j++) {
-      
+    if (charAt(1, 1) != ' ') {
+      return [[0,0],[1,1],[2,2]];
     }
   }
+  if ((charAt(0, 2) === charAt(1, 1)) && (charAt (2, 0) === charAt(1, 1))) {
+    if (charAt(1, 1) != ' ') {
+      return [[0,2],[1,1],[2,0]];
+    }
+  }
+  for (var i = 0; i < 3; i++) {
+    if ((charAt(0, i) === charAt(2, i)) && (charAt(0, i) === charAt(1, i))) {
+      if (charAt(0, i) != ' ') {
+        return [[0,i],[1,i],[2,i]];
+      }
+    }
+    if ((charAt(i, 0) === charAt(i, 1)) && (charAt(i, 0) === charAt(i, 2))) {
+      if (charAt(i, 0) != ' ') {
+        return [[i,0],[i,1],[i,2]];
+      }
+    }
+  }
+  return false;
 }
 
 $(function() {
@@ -133,7 +145,15 @@ $(function() {
     if ((x >= 0) && (y >= 0)) {
       addChar(userChar, x, y);
       turnNum++;
+      if (winCondition()) {
+        console.log('X wins');
+      } else if (turnNum >= 5) {
+        console.log('Tie Game.');
+      }
       ai();
+      if (winCondition()) {
+        console.log('O wins.');
+      }
     }
   });
 });
