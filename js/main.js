@@ -9,10 +9,28 @@ var xStart = 1;
 var xSkip = 4;
 var yStart = 0;
 var ySkip = 2;
-
+var gridSize = 3;
 var userChar = 'X';
 var aiChar = 'O';
 var turnNum = 0;
+
+var lines = [];
+var diag1 = [];
+var diag2 = [];
+for (var i = 0; i < gridSize; i++) {
+  var row = [];
+  var col = [];
+  for (var j = 0; j < gridSize; j++) {
+    row.push({x: i, y: j});
+    col.push({x: j, y: i});
+  }
+  lines.push(row);
+  lines.push(col);
+  diag1.push({x: i, y: i});
+  diag2.push({x: i, y: (gridSize - i - 1)});
+}
+lines.push(diag1);
+lines.push(diag2);
 
 function drawBoard() {
   var text = "";
@@ -63,7 +81,7 @@ function numFromPixels(string) {
 }
 
 function sumNumFromPixels(strings) {
-  sum = 0;
+  var sum = 0;
   for (i = 0; i < strings.length; i++) {
     sum += numFromPixels(strings[i]);
   }
@@ -88,49 +106,56 @@ function charAt(x, y) {
   return gameBoard[yStart + (y * ySkip)][xStart + (x * xSkip)];
 }
 
-function ai() {
-  if (charAt(1, 1) === ' ') {
-    addChar(aiChar, 1, 1);
-  } else {
-    switch(turnNum) {
-      case 5:
+function aiHard() {
+  switch (charAt(1, 1)) {
+    case ' ':
+      addChar(aiChar, 1, 1);
       break;
-      default:
-        console.log(turnNum);
-        // play randomly
-        var x = 1;
-        var y = 1;
-        while (charAt(x, y) != ' ') {
-          x = Math.floor(Math.random() * 3);
-          y = Math.floor(Math.random() * 3);
-        }
-        addChar(aiChar, x, y);
-        break;
-    }
+    case userChar:
+
   }
 }
 
+function ai() {
+  var x = 1;
+  var y = 1;
+  while (charAt(x, y) != ' ') {
+    var x = Math.floor(Math.random() * 3);
+    var y = Math.floor(Math.random() * 3);
+  }
+  addChar(aiChar, x, y);
+}
+
 function winCondition() {
-  if ((charAt(0, 0) === charAt(1, 1)) && (charAt (2, 2) === charAt(1, 1))) {
-    if (charAt(1, 1) != ' ') {
-      return [[0,0],[1,1],[2,2]];
-    }
-  }
-  if ((charAt(0, 2) === charAt(1, 1)) && (charAt (2, 0) === charAt(1, 1))) {
-    if (charAt(1, 1) != ' ') {
-      return [[0,2],[1,1],[2,0]];
-    }
-  }
-  for (var i = 0; i < 3; i++) {
-    if ((charAt(0, i) === charAt(2, i)) && (charAt(0, i) === charAt(1, i))) {
-      if (charAt(0, i) != ' ') {
-        return [[0,i],[1,i],[2,i]];
+  for (var l = 0; l < lines.length; l++) {
+    var line = lines[l];
+    // console.log(line);
+    var char = charAt(line[0].x, line[0].y);
+    if (char != ' ') {
+      var i = 0;
+      while (char === charAt(line[i].x, line[i].y)) {
+        if (++i === gridSize) {
+          break;
+        }
+      }
+      if (i === gridSize) {
+        return line;
       }
     }
-    if ((charAt(i, 0) === charAt(i, 1)) && (charAt(i, 0) === charAt(i, 2))) {
-      if (charAt(i, 0) != ' ') {
-        return [[i,0],[i,1],[i,2]];
-      }
+  }
+  return false;
+}
+
+function winInOne() {
+  for (var l = 0; l < lines.length; l++) {
+    var line = lines[l];
+    var char = charAt(line[0].x, line[0].y);
+    var i = 1;
+    while (char === charAt(line[i].x, line[i].y)) {
+      i++;
+    }
+    if (i === gridSize) {
+      return line;
     }
   }
   return false;
@@ -146,13 +171,14 @@ $(function() {
       addChar(userChar, x, y);
       turnNum++;
       if (winCondition()) {
-        console.log('X wins');
+        $('#message-box').text('You Win!');
       } else if (turnNum >= 5) {
-        console.log('Tie Game.');
-      }
-      ai();
-      if (winCondition()) {
-        console.log('O wins.');
+        $('#message-box').text('Tie Game.');
+      } else {
+        ai();
+        if (winCondition()) {
+          $('#message-box').text('I Win!');
+        }
       }
     }
   });
