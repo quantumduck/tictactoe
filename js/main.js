@@ -110,6 +110,20 @@ function ai() {
   }
 }
 
+function winner() {
+  if ((charAt(0, 0) === charAt(1, 1)) && (charAt (2, 2) === charAt(1, 1))) {
+    return charAt(1, 1);
+  }
+  if ((charAt(0, 2) === charAt(1, 1)) && (charAt (2, 0) === charAt(1, 1))) {
+    return charAt(1, 1);
+  }
+  for (var i = 1; i < 3; i++) {
+    for (var j = 1; j < 3; j++) {
+      
+    }
+  }
+}
+
 $(function() {
   $('body').css('max-width', $('#game').css('width'));
   setTimeout(drawBoard, 500);
